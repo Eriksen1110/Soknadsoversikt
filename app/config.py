@@ -1,19 +1,29 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, make_response, flash, g
 import datetime
-from app.models import Application, db, bcrypt, User, Company, StatusChange
+from models import Application, db, bcrypt, User, Company, StatusChange
 from dotenv import load_dotenv
-from app.utils import login_required
+from utils import login_required
 from sqlalchemy import func
+import os
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 
-app.secret_key = 'your_secret_key'  # Set a secret key for session management
+app.secret_key = os.getenv('SECRET_KEY') 
+
+MODE = os.getenv('MODE', 'development')
+if MODE == 'production':
+    app.config['DEBUG'] = False
+else:
+    app.config['DEBUG'] = True
+
+PORT = int(os.getenv('PORT', 5000))
+HOST = os.getenv('HOST', 'localhost')
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://flaskuser:flaskpass@localhost:3307/applications_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.getenv('MY_SQL_USER')}:{os.getenv('MY_SQL_PASSWORD')}@{os.getenv('MY_SQL_URL')}/applications_db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database

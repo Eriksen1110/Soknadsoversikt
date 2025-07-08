@@ -74,12 +74,25 @@
   <div class="container mt-3">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <div id="flashMessage" class="alert alert-info alert-dismissible fade show" role="alert">
           {% for message in messages %}
             <div>{{ message }}</div>
           {% endfor %}
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        <script>
+          setTimeout(() => {
+            const flash = document.getElementById("flashMessage");
+            if (flash) {
+              // Bootstrap 5 fade-out using 'hide' class
+              flash.classList.remove("show");
+              flash.classList.add("hide");
+
+              // Fully remove from DOM after fade animation
+              setTimeout(() => flash.remove(), 500);
+            }
+          }, 5000);
+        </script>
       {% endif %}
     {% endwith %}
   </div>

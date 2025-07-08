@@ -1,4 +1,4 @@
-from app.config import *
+from config import *
 
 
 @app.before_request
@@ -224,8 +224,11 @@ def register():
         user = User(email=email, name=name, password=password)
         db.session.add(user)
         db.session.commit()
-        flash("Registration successful. Please login.")
-        return redirect(url_for('login'))
+
+        session['user_id'] = user.id
+
+        flash("Registration successful! Welcome.")
+        return redirect(url_for('home'))
 
     return render_template('register.html')
 
@@ -268,10 +271,6 @@ def utility_functions():
         }.get(status, "bg-light")
     return dict(get_badge_class=get_badge_class)
 
-@app.template_filter('strftime')
-def _jinja2_filter_datetime(value, format='%Y-%m'):
-    return value.strftime(format)
-
 
 # 404 Error
 @app.errorhandler(404)
@@ -283,5 +282,9 @@ def page_not_found(e):
 def server_error(e):
     return render_template('500.html'), 500
 
-
+if __name__ == '__main__':
+    app.run(
+        host=HOST,
+        port=PORT
+    )
 
