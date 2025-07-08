@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    
+    {% extends 'template.html' %}
+    {% block content %}
+
+
+<h1 class="fs-5 mb-2">Dashboard</h1>
+
+<!-- Summary Card -->
+<div class="row g-2 mb-3 justify-content-center">
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <div class="card text-bg-primary text-center small shadow-sm py-1">
+            <div class="card-body p-2">
+                <h6 class="card-title mb-1 text-white text-uppercase" style="font-size: 0.75rem;">Total</h6>
+                <div class="fw-bold fs-6">{{ total }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="row g-2 mb-3">
+    <div class="col-md-6">
+        <div class="card p-2 shadow-sm">
+            <h6 class="card-title mb-1 text-muted small">Status</h6>
+            <canvas id="statusPie" height="180"></canvas>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-2 shadow-sm">
+            <h6 class="card-title mb-1 text-muted small">By Category</h6>
+            <canvas id="categoryBar" height="180"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="row g-2">
+    <div class="col-12">
+        <div class="card p-2 shadow-sm">
+            <h6 class="card-title mb-1 text-muted small">Over Time</h6>
+            <canvas id="timelineLine" height="180"></canvas>
+        </div>
+    </div>
+</div>
+
+
+<script>
+const statusData = {
+    labels: {{ by_status | map(attribute=0) | list | tojson }},
+    datasets: [{
+        data: {{ by_status | map(attribute=1) | list | tojson }},
+        backgroundColor: ['#6c757d', '#0d6efd', '#ffc107', '#198754', '#dc3545'],
+    }]
+};
+new Chart(document.getElementById('statusPie'), {
+    type: 'pie',
+    data: statusData,
+});
+
+const categoryData = {
+    labels: {{ by_category | map(attribute=0) | list | tojson }},
+    datasets: [{
+        label: 'Applications per Category',
+        data: {{ by_category | map(attribute=1) | list | tojson }},
+        backgroundColor: '#0d6efd'
+    }]
+};
+new Chart(document.getElementById('categoryBar'), {
+    type: 'bar',
+    data: categoryData
+});
+
+const timeData = {
+    labels: {{ over_time_labels | tojson }},
+    datasets: [{
+        label: 'Applications Over Time',
+        data: {{ over_time_counts | tojson }},
+        borderColor: '#198754',
+        tension: 0.3
+    }]
+};
+new Chart(document.getElementById('timelineLine'), {
+    type: 'line',
+    data: timeData
+});
+</script>
+
+{% endblock %}
+</body>
+</html>

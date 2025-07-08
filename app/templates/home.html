@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    
+
 
 </head>
+
 <body>
 
     <!-- Get template.html-->
-    
+
     {% extends 'template.html' %}
     {% block content %}
 
@@ -28,13 +30,14 @@
         <div class="col-md-2 align-items-end">
             <button type="button" class="btn btn-success float-end" id="addApplication">Add New Application</button>
             <script>
-                document.getElementById("addApplication").addEventListener("click", function() {
+                document.getElementById("addApplication").addEventListener("click", function () {
                     $('#addApplicationModal').modal('show');
                 });
             </script>
         </div>
     </div>
-    <table class="table table-hover" id="applicationTabel">
+    
+    <table class="table" id="applicationTabel">
         <thead>
             <tr>
                 <th scope="col">Company</th>
@@ -43,47 +46,49 @@
                 <th scope="col">Deadline</th>
                 <th scope="col">Status</th>
                 <th scope="col">Link</th>
-                <th>    </th>
+                <th scope="col">Delete</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
-    
+
             {% for application in applications %}
             <tr>
-                <td>{{application.company}}</td>
+                <td>{% if application.company %}{{ application.company.name }}{% else %}N/A{% endif %}</td>
+
                 <td>{{application.role}}</td>
                 <td>{{application.category}}</td>
-                <td>
+                <td class="{% if application.days_left() < 0 %}text-danger
+                {% elif application.days_left() <= 3 %}text-warning
+                {% else %}text-success{% endif %}">
                     {{application.deadline}}
                     <br>
                     <small class="text-muted">
-                        {% if application.days_left < 0 %}
-                        {{application.days_left}} days ago
-                        {% else %}
-                        {{application.days_left}} days left
-                        {% endif %}
-                    </small>
+                        {% if application.days_left() < 0 %} {{application.days_left()}} days ago {% else %}
+                            {{application.days_left()}} days left {% endif %} </small>
                 </td>
+
                 <td>
-                    {% if application.status == "Not Started" %}
-                    <span class="badge rounded-pill bg-secondary">{{application.status}}</span>
-                    {% elif application.status == "Applied" %}
-                    <span class="badge rounded-pill bg-primary">{{application.status}}</span>
-                    {% elif application.status == "Interview" %}
-                    <span class="badge rounded-pill bg-warning text-dark">{{application.status}}</span>
-                    {% elif application.status == "Offer" %}
-                    <span class="badge rounded-pill bg-success">{{application.status}}</span>
-                    {% elif application.status == "Rejected" %}
-                    <span class="badge rounded-pill bg-danger">{{application.status}}</span>
-                    {% endif %}
+                    <select class="form-select form-select-sm badge-status" data-id="{{ application.id }}"
+                        onchange="changeStatus(this)">
+                        {% for s in ["Not Started", "Applied", "Interview", "Offer", "Rejected"] %}
+                        <option value="{{ s }}" {% if s==application.status %}selected{% endif %}
+                            data-class="{{ get_badge_class(s) }}">
+                            {{ s }}
+                        </option>
+                        {% endfor %}
+                    </select>
                 </td>
+
                 <td><a href="{{application.link}}" target="_blank">Link</a></td>
                 <td>
-                    <a class="btn btn-link" value="{{application.id}}" onclick="deleteApplication(this)"><i class="bi bi-trash3"></i></a>
+                    <a class="btn btn-link" value="{{application.id}}" onclick="deleteApplication(this)"><i
+                            class="bi bi-trash3"></i></a>
                 </td>
                 <td>
-                    <a href="#" class="btn btn-link"><i class="bi bi-three-dots-vertical"></i></a>
-                </td>
+                    <a href="#" class="btn btn-link" onclick="openEditModal(this)" data-id="{{application.id}}">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </a>
             </tr>
             {% endfor %}
             <!--
@@ -102,7 +107,8 @@
     </table>
 
     <!-- Add application modal-->
-    <div class="modal fade" id="addApplicationModal" tabindex="-1" aria-labelledby="addApplicationModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addApplicationModal" tabindex="-1" aria-labelledby="addApplicationModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -142,7 +148,7 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status">
-                                <option selected disabled >Choose...</option>
+                                <option selected disabled>Choose...</option>
                                 <option value="Not Started">Not Started</option>
                                 <option value="Applied">Applied</option>
                                 <option value="Interview">Interview</option>
@@ -167,75 +173,50 @@
             </div>
         </div>
     </div>
+    <!-- Edit Application Modal -->
+    <div class="modal fade" id="editApplicationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Application</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-id">
+                    <div class="mb-3 position-relative">
+                        <label for="company" class="form-label">Company</label>
+                        <input type="text" class="form-control" id="edit-company" autocomplete="off" required>
+                        <div class="list-group position-absolute w-100" id="companySuggestions" style="z-index: 1000;"></div>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Role</label><input type="text" class="form-control"
+                            id="edit-role"></div>
+                    <div class="mb-3"><label class="form-label">Category</label><input type="text" class="form-control"
+                            id="edit-category"></div>
+                    <div class="mb-3"><label class="form-label">Deadline</label><input type="date" class="form-control"
+                            id="edit-deadline"></div>
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="edit-status">
+                            <option value="Not Started">Not Started</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Interview">Interview</option>
+                            <option value="Offer">Offer</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Link</label><input type="text" class="form-control"
+                            id="edit-link"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" id="editApplicationButton">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        // Add application button
-        document.getElementById("addApplicationButton").addEventListener("click", function() {
-            // Validate the form
-            var forms = document.querySelectorAll('.needs-validation')
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                    }
-
-                    form.classList.add('was-validated')
-                }, false)
-                })
-            
-            // Get the values from the form
-            var company = document.getElementById("company").value;
-            var role = document.getElementById("role").value;
-            var category = document.getElementById("category").value;
-            var deadline = document.getElementById("deadline").value;
-            var status = document.getElementById("status").value;
-            var link = document.getElementById("link").value;
-
-            // Send the data to the server
-            $.ajax({
-                url: '/add',
-                type: 'POST',
-                data: {
-                    company: company,
-                    role: role,
-                    category: category,
-                    deadline: deadline,
-                    status: status,
-                    link: link
-                },
-                success: function(response) {
-                    console.log(response);
-                    $('#addApplicationModal').modal('hide');
-                    location.reload();
-                }
-            });
-        });
-    </script>
-
-    <script>
-        // Remove application button
-        const deleteApplication = (element) => {
-            var id = element.getAttribute("value");
-            $.ajax({
-                url: '/delete',
-                type: 'POST',
-                data: {
-                    id: id
-                },
-                success: function(response) {
-                    console.log(response);
-                    location.reload();
-                },
-                error: function(error) {
-                    alert(error);
-                }
-            });
-        }
-    </script>
 
     {% endblock %}
 </body>
+
 </html>
