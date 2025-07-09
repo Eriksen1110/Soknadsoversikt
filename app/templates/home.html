@@ -17,8 +17,13 @@
     {% extends 'template.html' %}
     {% block content %}
 
-    <h1>Your applications</h1>
-    <small>Click on the links below to access the applications</small>
+    <div class="d-flex flex-column align-items-start mb-4">
+    <h1 class="fw-semibold fs-3 mb-1">
+        <i class="bi bi-briefcase-fill me-2"></i>Your Applications
+    </h1>
+    <p class="text-muted mb-0">Browse and manage your job applications below.</p>
+    </div>
+
     <div class="row">
         <!-- Empty column -->
         <div class="col-md-6"></div>
@@ -37,7 +42,7 @@
         </div>
     </div>
     
-    <table class="table" id="applicationTabel">
+    <table class="table" id="applicationsTable">
         <thead>
             <tr>
                 <th scope="col">Company</th>
@@ -106,114 +111,148 @@
         </tbody>
     </table>
 
-    <!-- Add application modal-->
-    <div class="modal fade" id="addApplicationModal" tabindex="-1" aria-labelledby="addApplicationModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addApplicationModalLabel">Add Application</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="company" class="form-label">Company</label>
-                            <input type="text" class="form-control" id="company" required>
-                            <div class="list-group position-absolute w-80" id="companySuggestions" style="z-index: 1000;"></div>
-                            <div class="invalid-feedback">
-                                Please enter a company name
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="role" class="form-label">Role</label>
-                            <input type="text" class="form-control" id="role" required>
-                            <div class="invalid-feedback">
-                                Please enter a role
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="category" class="form-label">Category</label>
-                            <input type="text" class="form-control" id="category" required>
-                            <div class="invalid-feedback">
-                                Please enter a category
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="deadline" class="form-label">Deadline</label>
-                            <input type="date" class="form-control" id="deadline" required>
-                            <div class="invalid-feedback">
-                                Please enter a deadline
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-select" id="status">
-                                <option selected disabled>Choose...</option>
-                                <option value="Not Started">Not Started</option>
-                                <option value="Applied">Applied</option>
-                                <option value="Interview">Interview</option>
-                                <option value="Offer">Offer</option>
-                                <option value="Rejected">Rejected</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Please select a status
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="link" class="form-label">Link (optinal)</label>
-                            <input type="text" class="form-control" id="link">
-                        </div>
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="addApplicationButton">Add application</button>
-                </div>
+    <!-- Add Application Modal -->
+    <div class="modal fade" id="addApplicationModal" tabindex="-1" aria-labelledby="addApplicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content shadow-sm">
+        <div class="modal-header">
+            <h5 class="modal-title" id="addApplicationModalLabel">Add New Application</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+            <!-- Company -->
+            <div class="mb-3">
+                <label for="company" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company" placeholder="e.g. PwC, Telenor, Schibsted" required>
+                <div class="form-text">Start typing to search existing companies, or enter a new one.</div>
+                <div class="list-group position-absolute w-80" id="companySuggestions" style="z-index: 1000;"></div>
+                <div class="invalid-feedback">Please enter a company name</div>
             </div>
+
+            <!-- Role -->
+            <div class="mb-3">
+                <label for="role" class="form-label">Role</label>
+                <input type="text" class="form-control" id="role" placeholder="e.g. Summer Intern, Data Analyst" required>
+                <div class="form-text">What position are you applying for?</div>
+                <div class="invalid-feedback">Please enter a role</div>
+            </div>
+
+            <!-- Category -->
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <input type="text" class="form-control" id="category" placeholder="e.g. Internship, Graduate Program" required>
+                <div class="form-text">Use your own categories for filtering later.</div>
+                <div class="invalid-feedback">Please enter a category</div>
+            </div>
+
+            <!-- Deadline -->
+            <div class="mb-3">
+                <label for="deadline" class="form-label">Deadline</label>
+                <input type="date" class="form-control" id="deadline" required>
+                <div class="form-text">When is the application due?</div>
+                <div class="invalid-feedback">Please enter a deadline</div>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" required>
+                <option selected disabled>Choose...</option>
+                <option value="Not Started">Not Started</option>
+                <option value="Applied">Applied</option>
+                <option value="Interview">Interview</option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">Rejected</option>
+                </select>
+                <div class="form-text">What stage are you in for this application?</div>
+                <div class="invalid-feedback">Please select a status</div>
+            </div>
+
+            <!-- Link -->
+            <div class="mb-3">
+                <label for="link" class="form-label">Link (optional)</label>
+                <input type="text" class="form-control" id="link" placeholder="e.g. https://careers.telenor.com/job/123">
+                <div class="form-text">Paste the application or job ad link if you have it.</div>
+            </div>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="addApplicationButton">Add Application</button>
+        </div>
         </div>
     </div>
+    </div>
     <!-- Edit Application Modal -->
-    <div class="modal fade" id="editApplicationModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Application</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="edit-id">
-                    <div class="mb-3 position-relative">
-                        <label for="company" class="form-label">Company</label>
-                        <input type="text" class="form-control" id="edit-company" autocomplete="off" required>
-                        <div class="list-group position-absolute w-100" id="companySuggestions" style="z-index: 1000;"></div>
-                    </div>
-                    <div class="mb-3"><label class="form-label">Role</label><input type="text" class="form-control"
-                            id="edit-role"></div>
-                    <div class="mb-3"><label class="form-label">Category</label><input type="text" class="form-control"
-                            id="edit-category"></div>
-                    <div class="mb-3"><label class="form-label">Deadline</label><input type="date" class="form-control"
-                            id="edit-deadline"></div>
-                    <div class="mb-3">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" id="edit-status">
-                            <option value="Not Started">Not Started</option>
-                            <option value="Applied">Applied</option>
-                            <option value="Interview">Interview</option>
-                            <option value="Offer">Offer</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
-                    </div>
-                    <div class="mb-3"><label class="form-label">Link</label><input type="text" class="form-control"
-                            id="edit-link"></div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" id="editApplicationButton">Save changes</button>
-                </div>
+    <div class="modal fade" id="editApplicationModal" tabindex="-1" aria-labelledby="editApplicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content shadow-sm">
+        <div class="modal-header">
+            <h5 class="modal-title" id="editApplicationModalLabel">Edit Application</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+            <input type="hidden" id="edit-id">
+
+            <!-- Company -->
+            <div class="mb-3">
+            <label for="edit-company" class="form-label">Company</label>
+            <input type="text" class="form-control" id="edit-company" placeholder="e.g. PwC, Telenor, Schibsted" required>
+            <div class="form-text">Update the company name if needed. Autocomplete is enabled.</div>
+            <div class="list-group position-absolute w-80" id="companySuggestions" style="z-index: 1000;"></div>
+            </div>
+
+            <!-- Role -->
+            <div class="mb-3">
+            <label for="edit-role" class="form-label">Role</label>
+            <input type="text" class="form-control" id="edit-role" placeholder="e.g. Summer Intern, Analyst" required>
+            <div class="form-text">Change the position you applied for.</div>
+            </div>
+
+            <!-- Category -->
+            <div class="mb-3">
+            <label for="edit-category" class="form-label">Category</label>
+            <input type="text" class="form-control" id="edit-category" placeholder="e.g. Internship, Full-time" required>
+            <div class="form-text">This helps you filter and group your applications.</div>
+            </div>
+
+            <!-- Deadline -->
+            <div class="mb-3">
+            <label for="edit-deadline" class="form-label">Deadline</label>
+            <input type="date" class="form-control" id="edit-deadline" required>
+            <div class="form-text">Update the application deadline if changed.</div>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-3">
+            <label for="edit-status" class="form-label">Status</label>
+            <select class="form-select" id="edit-status" required>
+                <option value="Not Started">Not Started</option>
+                <option value="Applied">Applied</option>
+                <option value="Interview">Interview</option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+            <div class="form-text">Update your current progress for this application.</div>
+            </div>
+
+            <!-- Link -->
+            <div class="mb-3">
+            <label for="edit-link" class="form-label">Link (optional)</label>
+            <input type="text" class="form-control" id="edit-link" placeholder="e.g. https://company.com/careers/position">
+            <div class="form-text">Update the job posting link if needed.</div>
             </div>
         </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="editApplicationButton">Save Changes</button>
+        </div>
+        </div>
+    </div>
     </div>
 
 

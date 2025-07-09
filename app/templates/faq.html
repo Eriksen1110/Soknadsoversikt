@@ -1,0 +1,183 @@
+{% extends 'public_template.html' %}
+{% block title %}FAQ – Søknadsoversikt{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --dark-start: #0f1218;
+    --dark-end:   #171a23;
+    --card-bg:    #1a1e29;
+    --section-bg: #0c0f14;
+    --text-light:#f1f1f1;
+    --accent:     #17a2b8;
+  }
+
+  /* Section spacing */
+  section + section {
+    margin-top: 4rem;
+  }
+
+  /* FAQ Section */
+  .faq {
+    background: var(--section-bg);
+    color: var(--text-light);
+    padding: 4rem 1rem;
+    text-align: center;
+  }
+  .faq .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .faq h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+
+  /* Accordion styling */
+  .faq .accordion-flush .accordion-item {
+    background: var(--card-bg);
+    border-radius: .5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 .25rem .75rem rgba(0,0,0,0.4);
+    overflow: hidden;
+  }
+  .faq .accordion-button {
+    background: transparent;
+    color: var(--text-light);
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+  }
+  .faq .accordion-button:not(.collapsed) {
+    background: rgba(255,255,255,0.05);
+  }
+  .faq .accordion-button::after {
+    filter: invert(1); /* make caret visible on dark bg */
+  }
+  .faq .accordion-body {
+    padding: 1rem 1.25rem 1.5rem;
+    color: #ddd;
+    line-height: 1.6;
+  }
+
+  /* Accent line under each question when expanded */
+  .faq .accordion-button:not(.collapsed) {
+    border-left: 4px solid var(--accent);
+  }
+</style>
+
+<section class="faq">
+  <div class="container">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="accordion accordion-flush" id="faqAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseOne"
+            aria-expanded="false"
+            aria-controls="collapseOne"
+          >
+            What is Søknadsoversikt?
+          </button>
+        </h2>
+        <div
+          id="collapseOne"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingOne"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Søknadsoversikt is a free, open, and elegant tool for tracking your
+            job applications. It helps you stay organized, monitor deadlines,
+            and visualize your job search progress.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseTwo"
+            aria-expanded="false"
+            aria-controls="collapseTwo"
+          >
+            Is it really free?
+          </button>
+        </h2>
+        <div
+          id="collapseTwo"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingTwo"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Yes. Søknadsoversikt is 100% free to use with no hidden fees or
+            premium versions. We believe job seeking should be simple and
+            accessible to everyone.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseThree"
+            aria-expanded="false"
+            aria-controls="collapseThree"
+          >
+            Do I need an account to use it?
+          </button>
+        </h2>
+        <div
+          id="collapseThree"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingThree"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Yes, you need to create a free account to store and manage your job
+            applications securely.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingFour">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseFour"
+            aria-expanded="false"
+            aria-controls="collapseFour"
+          >
+            Who built Søknadsoversikt?
+          </button>
+        </h2>
+        <div
+          id="collapseFour"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingFour"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Søknadsoversikt was built by a student organization in Bergen,
+            designed to help simplify and improve the job-seeking process for
+            everyone.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

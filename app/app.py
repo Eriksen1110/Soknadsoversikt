@@ -16,6 +16,51 @@ def index():
     return render_template('welcome.html')
 
 
+@app.route('/faq')
+def faq():
+    """
+    Render the FAQ page.
+    """
+    return render_template('faq.html')
+
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        message = request.form.get("message")
+
+        if not message:
+            flash("Please enter a message.", "warning")
+            return redirect("/contact")
+
+        # TODO: Store or forward the message (e.g. via email or database)
+        flash("Thanks for your feedback!", "success")
+        return redirect("/contact")
+
+    return render_template("public_contact.html")
+
+
+@app.route("/applications/contact", methods=["GET", "POST"])
+def application_contact():
+    if request.method == "POST":
+        name = request.form.get("name", "Anonymous")
+        email = request.form.get("email", "")
+        message = request.form.get("message", "").strip()
+
+        if not message:
+            flash("Message cannot be empty.", "danger")
+            return redirect("/contact")
+
+        # You could store in a DB, or email to admins
+        print(f"New feedback from {name} ({email}): {message}")
+
+        flash("Thanks for your message! We'll get back to you if needed.", "success")
+        return redirect("/contact")
+
+    return render_template("contact.html")
+
 @app.route('/home')
 @login_required
 def home():
@@ -229,6 +274,9 @@ def register():
 
         flash("Registration successful! Welcome.")
         return redirect(url_for('home'))
+    if g.user:
+        flash("You are already logged in")
+        return redirect(url_for('home'))
 
     return render_template('register.html')
 
@@ -247,7 +295,9 @@ def login():
         else:
             flash('Invalid credentials')
             return redirect(url_for('login'))
-
+    if g.user:
+        flash("You are already logged in")
+        return redirect(url_for('home'))
     return render_template('login.html')
 
 

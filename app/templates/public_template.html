@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Søknadsoversikt{% endblock %}</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Custom styling -->
+  <style>
+    html, body {
+      height: 100%;
+      background-color: #0d1117;
+      color: #e6edf3;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+
+    header a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem 1rem;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 2rem 0;
+      color: #999;
+      text-align: center;
+    }
+
+    .form-control, .form-select {
+      background-color: #161b22;
+      border-color: #30363d;
+      color: #e6edf3;
+    }
+
+    .form-control::placeholder {
+      color: #6e7681;
+    }
+
+    .btn-primary {
+      background-color: #2da44e;
+      border-color: #2da44e;
+    }
+
+    .btn-primary:hover {
+      background-color: #238636;
+      border-color: #238636;
+    }
+  </style>
+</head>
+<body>
+
+ 
+<!-- Header -->
+<header class="container py-3 text-center border-bottom border-secondary-subtle">
+  <a href="/" class="text-decoration-none text-white">
+    <h1 class="h3 mb-1"><i class="bi bi-briefcase-fill me-1"></i>Søknadsoversikt</h1>
+    <p class="text-light-emphasis small mb-0">Your job application manager</p>
+  </a>
+</header>
+
+<!-- Slim Navigation -->
+<nav class="navbar navbar-expand-md navbar-dark" style="background-color: #0e1117; font-size: 0.9rem;">
+  <div class="container px-3">
+    <button class="navbar-toggler py-1 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#publicNav"
+      aria-controls="publicNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon small"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="publicNav">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/faq' %}active{% endif %}" href="/faq">FAQ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/contact' %}active{% endif %}" href="/contact">Contact</a>
+        </li>
+      </ul>
+      <div class="d-flex gap-2">
+        <a href="/register" class="btn btn-sm btn-outline-light px-3">Sign Up</a>
+        <a href="/login" class="btn btn-sm btn-light text-dark px-3">Login</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <!-- Main Content -->
+  <main class="container" >
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="mb-1">&copy; 2025 Søknadsoversikt</p>
+      <small>Built with ♥ in Bergen — free and open for all</small>
+    </div>
+  </footer>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</html>

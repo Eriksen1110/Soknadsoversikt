@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById("search").addEventListener("input", function () {
         const term = this.value.toLowerCase();
-        document.querySelectorAll("#applicationTabel tbody tr").forEach(row => {
+        document.querySelectorAll("#applicationsTable tbody tr").forEach(row => {
             row.style.display = row.innerText.toLowerCase().includes(term) ? "" : "none";
         });
     });
@@ -150,3 +150,15 @@ $(document).ready(function () {
 });
 
 
+$(document).ready(function () {
+    const table = $('#applicationsTable').DataTable({
+        paging: true,
+        ordering: true,
+        info: true,
+        responsive: true,
+        searching: false, 
+        columnDefs: [
+            { orderable: false, targets: -1 }
+        ]
+    });
+});
